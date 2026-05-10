@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Property Transaction Costs — Herbert-Williams 2025</title>
+<style>
+:root{
+  --color-background-primary:#ffffff;--color-background-secondary:#f5f5f5;
+  --color-background-info:#e8f0fb;--color-background-success:#e8f5ee;
+  --color-background-warning:#fdf3e3;--color-background-danger:#fdecea;
+  --color-text-primary:#1a1a1a;--color-text-secondary:#666;--color-text-tertiary:#999;
+  --color-text-info:#1a5ea8;--color-text-success:#1e6b30;
+  --color-text-warning:#8b4513;--color-text-danger:#8b1a1a;
+  --color-border-tertiary:rgba(0,0,0,0.1);--color-border-secondary:rgba(0,0,0,0.2);
+  --color-border-primary:rgba(0,0,0,0.3);
+  --color-border-info:rgba(26,94,168,0.3);--color-border-success:rgba(30,107,48,0.3);
+  --color-border-warning:rgba(139,69,19,0.3);--color-border-danger:rgba(139,26,26,0.3);
+  --border-radius-md:8px;--border-radius-lg:12px;
+  --font-sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;
+}
+@media(prefers-color-scheme:dark){:root{
+  --color-background-primary:#1e1e1e;--color-background-secondary:#2a2a2a;
+  --color-background-info:#0d2a4a;--color-background-success:#0d2a1a;
+  --color-background-warning:#2a1a0d;--color-background-danger:#2a0d0d;
+  --color-text-primary:#e8e8e8;--color-text-secondary:#aaa;--color-text-tertiary:#777;
+  --color-text-info:#6aabf7;--color-text-success:#6acf8a;
+  --color-text-warning:#e8a87c;--color-text-danger:#f08080;
+  --color-border-tertiary:rgba(255,255,255,0.1);--color-border-secondary:rgba(255,255,255,0.2);
+  --color-border-primary:rgba(255,255,255,0.3);
+  --color-border-info:rgba(106,171,247,0.3);--color-border-success:rgba(106,207,138,0.3);
+  --color-border-warning:rgba(232,168,124,0.3);--color-border-danger:rgba(240,128,128,0.3);
+}}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans);background:var(--color-background-secondary);color:var(--color-text-primary);font-size:15px;line-height:1.6;padding:2rem 1rem;min-height:100vh}
+.container{max-width:780px;margin:0 auto}
+h1{font-size:22px;font-weight:500;margin-bottom:.25rem}
+h2{font-size:18px;font-weight:500;margin:1.5rem 0 .5rem;display:flex;align-items:center;gap:8px}
+h2 .sn{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);font-size:12px;font-weight:500;color:var(--color-text-secondary)}
+p.sub{font-size:13px;color:var(--color-text-secondary);margin-bottom:.75rem}
+.panel{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1.25rem;margin-bottom:1.5rem}
+.panel-label{font-size:12px;color:var(--color-text-secondary);font-weight:500;margin-bottom:.75rem}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:.75rem}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:.75rem}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+@media(max-width:600px){.g2,.g3,.g4{grid-template-columns:1fr}}
+.fld label{display:block;font-size:12px;color:var(--color-text-secondary);margin-bottom:4px}
+.fld label small{opacity:.7;font-weight:400}
+.ir{display:flex;align-items:center;gap:4px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);padding:5px 8px}
+.ir.warn{border-color:var(--color-border-warning);background:var(--color-background-warning)}
+.ir span{font-size:13px;color:var(--color-text-tertiary);flex-shrink:0}
+.ir input,.mw input{border:none;outline:none;background:none;font-size:16px;font-weight:500;color:var(--color-text-primary);width:100%}
+.ir input::-webkit-inner-spin-button,.mw input::-webkit-inner-spin-button{-webkit-appearance:none}
+.ir input[type=range]{height:4px;padding:0}
+.oc{background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:.75rem;text-align:center}
+.oc .lbl{font-size:11px;color:var(--color-text-secondary);margin-bottom:4px}
+.oc .val{font-size:18px;font-weight:500}
+.oc .note{font-size:11px;color:var(--color-text-tertiary);margin-top:3px}
+.oc.rik .val{color:var(--color-text-warning)}
+.oc.eli .val{color:var(--color-text-info)}
+.sc-notice{background:var(--color-background-danger);border:0.5px solid var(--color-border-danger);border-radius:var(--border-radius-md);padding:.6rem 1rem;font-size:13px;color:var(--color-text-danger);margin-top:8px}
+.sdlt-warn{display:none;background:var(--color-background-warning);border:0.5px solid var(--color-border-warning);border-radius:var(--border-radius-md);padding:.6rem 1rem;font-size:13px;color:var(--color-text-warning);margin-top:.75rem}
+.divider{border:none;border-top:0.5px solid var(--color-border-tertiary);margin:1.5rem 0 1rem}
+.tbl{width:100%;border-collapse:collapse;font-size:13px;margin:.5rem 0}
+.tbl th{font-size:11px;color:var(--color-text-secondary);font-weight:500;padding:5px 8px;border-bottom:0.5px solid var(--color-border-secondary);text-align:left}
+.tbl th:not(:first-child){text-align:right}
+.tbl td{padding:7px 8px;border-bottom:0.5px solid var(--color-border-tertiary);font-size:13px;vertical-align:top}
+.tbl td:not(:first-child){text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+.tbl tr:last-child td{border-bottom:none}
+.tbl .sub{font-size:11px;color:var(--color-text-tertiary);display:block;text-align:left}
+.tbl .tot td{background:var(--color-background-secondary);font-weight:500}
+.tbl .band td{color:var(--color-text-secondary);font-size:12px}
+.tbl .sc-row td{background:var(--color-background-danger)}
+.rik-c{color:var(--color-text-warning);font-weight:500}
+.eli-c{color:var(--color-text-info);font-weight:500}
+.grn-c{color:var(--color-text-success);font-weight:500}
+.co{padding:.75rem 1rem;margin:.75rem 0;font-size:13px;line-height:1.6;border-left:3px solid transparent}
+.co .ch{font-size:11px;font-weight:500;margin-bottom:3px}
+.co b{font-weight:500}
+.co-g{background:var(--color-background-success);border-color:var(--color-border-success)}.co-g .ch{color:var(--color-text-success)}
+.co-b{background:var(--color-background-info);border-color:var(--color-border-info)}.co-b .ch{color:var(--color-text-info)}
+.co-o{background:var(--color-background-warning);border-color:var(--color-border-warning)}.co-o .ch{color:var(--color-text-warning)}
+.co-n{background:var(--color-background-secondary);border-color:var(--color-border-primary)}.co-n .ch{color:var(--color-text-secondary)}
+.co-r{background:var(--color-background-danger);border-color:var(--color-border-danger)}.co-r .ch{color:var(--color-text-danger)}
+.bridge{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden;margin-bottom:10px}
+.bh{background:var(--color-background-secondary);padding:6px 14px;font-size:11px;font-weight:500;color:var(--color-text-secondary);border-bottom:0.5px solid var(--color-border-tertiary)}
+.br{display:flex;align-items:flex-start;padding:8px 14px;border-bottom:0.5px solid var(--color-border-tertiary);font-size:13px;gap:4px}
+.br:last-child{border-bottom:none}
+.br.rt{background:var(--color-background-warning)}.br.et{background:var(--color-background-info)}.br.jt{background:var(--color-background-secondary)}.br.dt{background:var(--color-background-danger)}
+.br .sg{width:16px;color:var(--color-text-tertiary);flex-shrink:0;text-align:center}
+.br .lb{flex:1;font-weight:500}.br .sb{font-size:11px;display:block;font-weight:400;color:var(--color-text-tertiary)}
+.br.rt .lb{color:var(--color-text-warning)}.br.rt .sg{color:var(--color-text-warning)}.br.rt .bv{color:var(--color-text-warning)}
+.br.et .lb{color:var(--color-text-info)}.br.et .sg{color:var(--color-text-info)}.br.et .bv{color:var(--color-text-info)}
+.br.dt .lb{color:var(--color-text-danger)}.br.dt .sg{color:var(--color-text-danger)}.br.dt .bv{color:var(--color-text-danger)}
+.br.jt .lb,.br.jt .sg{color:var(--color-text-secondary)}
+.br .bv{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums;white-space:nowrap}
+.ratio-wrap{background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem;margin:1rem 0}
+.ratio-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem}
+.ratio-lbl{font-size:12px;font-weight:500;color:var(--color-text-secondary)}
+.ratio-badge{font-size:12px;font-weight:500;padding:3px 10px;border-radius:var(--border-radius-md);background:var(--color-background-primary);border:0.5px solid var(--color-border-secondary)}
+.ratio-pills{display:flex;justify-content:space-between;margin-bottom:6px}
+.ratio-pill{font-size:12px;font-weight:500}
+.ratio-pill.rik{color:var(--color-text-warning)}
+.ratio-pill.eli{color:var(--color-text-info)}
+.ratio-slider-wrap{position:relative;padding-bottom:20px}
+.ratio-slider-wrap input[type=range]{width:100%}
+.ratio-marker{position:absolute;bottom:0;font-size:10px;color:var(--color-text-tertiary);transform:translateX(-50%);white-space:nowrap}
+.ratio-marker::before{content:'';display:block;width:1px;height:6px;background:var(--color-border-secondary);margin:0 auto 2px}
+.ratio-note{font-size:11px;color:var(--color-text-tertiary);text-align:center;margin-top:4px}
+.thg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:.75rem 0}
+@media(max-width:500px){.thg{grid-template-columns:1fr}}
+.thc{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:.75rem}
+.thc.al{border-color:var(--color-border-danger)}
+.thc .tp{font-size:15px;font-weight:500;margin-bottom:2px}
+.thc.al .tp{color:var(--color-text-danger)}
+.thc .ts{font-size:12px;color:var(--color-text-secondary);margin-bottom:6px}
+.thc .ts strong{color:var(--color-text-warning)}
+.thc.al .ts strong{color:var(--color-text-danger)}
+.thbar{height:4px;background:var(--color-background-secondary);border-radius:2px;overflow:hidden;margin-bottom:4px}
+.thfil{height:100%;background:var(--color-text-warning);border-radius:2px}
+.thc.al .thfil{background:var(--color-text-danger)}
+.thn{font-size:11px;color:var(--color-text-tertiary)}
+.thc.al .thn{color:var(--color-text-danger)}
+.mw{display:flex;align-items:center;gap:4px;background:var(--color-background-primary);border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);padding:5px 8px}
+.mw.ro{background:var(--color-background-secondary)}
+.mw span{font-size:12px;color:var(--color-text-tertiary);flex-shrink:0}
+.mw input[readonly]{color:var(--color-text-secondary)}
+.mc{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:.75rem;text-align:center}
+.mc .ml{font-size:11px;color:var(--color-text-secondary);margin-bottom:4px}
+.mc .mv{font-size:17px;font-weight:500}
+.mc .mn{font-size:11px;color:var(--color-text-tertiary);margin-top:3px}
+.mc.gs .mv{color:var(--color-text-success)}
+.mc.wa .mv{color:var(--color-text-warning)}
+.mc.if .mv{color:var(--color-text-info)}
+.chart-box{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:.75rem 1rem;margin:.75rem 0}
+.leg{display:flex;gap:16px;margin-top:6px;flex-wrap:wrap}
+.leg-i{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--color-text-secondary)}
+.leg-l{width:16px;height:3px;border-radius:2px;flex-shrink:0}
+.footer{font-size:11px;color:var(--color-text-tertiary);text-align:center;margin-top:2rem;padding-top:.75rem;border-top:0.5px solid var(--color-border-tertiary)}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>Property transaction costs</h1>
+<p class="sub">Herbert-Williams &middot; May 2025 &middot; England &mdash; primary residence</p>
+
+<div class="panel">
+  <div class="panel-label">Adjust values &mdash; all figures update live</div>
+  <div class="g2">
+    <div class="fld">
+      <label>Selling price <small>(Rik, sole owner)</small></label>
+      <div class="ir"><span>&pound;</span><input id="v-sale" type="number" min="100000" max="2000000" step="5000" value="350000"></div>
+      <input type="range" id="s-sale" min="100000" max="1000000" step="5000" value="350000" style="width:100%;margin-top:4px">
+      <div style="font-size:11px;color:var(--color-text-tertiary);margin-top:3px">Mortgage remaining: &pound;<input id="v-mort" type="number" min="0" max="900000" step="1000" value="157000" style="background:none;border:none;border-bottom:0.5px solid var(--color-border-secondary);font-size:11px;width:72px;outline:none;color:var(--color-text-secondary)"></div>
+    </div>
+    <div class="fld">
+      <label>Purchase price <small>(joint, costs split by ratio)</small></label>
+      <div class="ir"><span>&pound;</span><input id="v-buy" type="number" min="100000" max="3000000" step="5000" value="800000"></div>
+      <input type="range" id="s-buy" min="200000" max="2000000" step="5000" value="800000" style="width:100%;margin-top:4px">
+    </div>
+  </div>
+  <div class="g2">
+    <div class="fld">
+      <label>Rik &mdash; additional deposit <small>(cash beyond equity)</small></label>
+      <div class="ir"><span>&pound;</span><input id="v-xrik" type="number" min="0" max="2000000" step="5000" value="30000"></div>
+      <input type="range" id="s-xrik" min="0" max="500000" step="5000" value="30000" style="width:100%;margin-top:4px">
+    </div>
+    <div class="fld">
+      <label>Elisa &mdash; additional deposit <small>(cash beyond buying costs)</small></label>
+      <div class="ir"><span>&pound;</span><input id="v-xeli" type="number" min="0" max="2000000" step="5000" value="30000"></div>
+      <input type="range" id="s-xeli" min="0" max="500000" step="5000" value="30000" style="width:100%;margin-top:4px">
+    </div>
+  </div>
+  <div class="fld" style="margin-bottom:.75rem">
+    <label>Outstanding leasehold service charge <small>(Kingslee Court major works &mdash; unbilled est.)</small></label>
+    <div class="ir warn"><span>&pound;</span><input id="v-sc" type="number" min="0" max="100000" step="500" value="18000"></div>
+    <div class="sc-notice">Reduces Rik&rsquo;s net equity from the sale. Update when the final demand is received from Sutton Housing Partnership.</div>
+  </div>
+  <div class="g4">
+    <div class="oc rik"><div class="lbl">Rik &mdash; total friction</div><div class="val" id="o-rik">—</div><div class="note">selling + ratio share of buying</div></div>
+    <div class="oc eli"><div class="lbl">Elisa &mdash; cash needed</div><div class="val" id="o-eli">—</div><div class="note" id="o-eli-note">ratio share of buying</div></div>
+    <div class="oc"><div class="lbl">Joint mortgage</div><div class="val" id="o-mtg">—</div><div class="note" id="o-ltv">—</div></div>
+    <div class="oc"><div class="lbl">Monthly repayment</div><div class="val" id="o-mth">—</div><div class="note" id="o-mth2">—</div></div>
+  </div>
+  <div class="sdlt-warn" id="sdlt-warn">Purchase crosses the &pound;925,000 SDLT threshold &mdash; marginal rate jumps to 10% above this line. Consider negotiating to &pound;924,999.</div>
+</div>
+
+<hr class="divider">
+<h2><span class="sn">1</span>Selling &mdash; Rik&rsquo;s sole responsibility</h2>
+<table class="tbl">
+  <thead><tr><th>Item</th><th>Basis</th><th>Amount</th></tr></thead>
+  <tbody>
+    <tr><td>Estate agent fee<span class="sub">1.5% + VAT &mdash; hybrid agents from ~&pound;1,500 fixed</span></td><td>1.5% + VAT</td><td id="c-agent">—</td></tr>
+    <tr><td>Solicitor / conveyancing</td><td>Fixed</td><td>&pound;1,500</td></tr>
+    <tr><td>EPC certificate</td><td>Market</td><td>&pound;100</td></tr>
+    <tr><td>Mortgage exit fee</td><td>Typical</td><td>&pound;150</td></tr>
+    <tr class="sc-row"><td><b style="color:var(--color-text-danger)">Outstanding service charge</b><span class="sub">Kingslee Court major works &mdash; S20 Feb 2021, S20B Feb 2023. Final demand pending from SHP.</span></td><td style="color:var(--color-text-danger)">Leasehold</td><td id="c-sc" style="color:var(--color-text-danger);font-weight:500">—</td></tr>
+  </tbody>
+  <tr class="tot"><td colspan="2"><b>Total selling costs &mdash; Rik only</b></td><td id="c-sell-tot">—</td></tr>
+</table>
+<div class="co co-g"><div class="ch">Capital gains tax &mdash; nil</div>Purchased mid-2014 at &pound;249,000; primary residence throughout. Gain of <b id="c-gain">—</b> fully sheltered by PPR relief. Without PPR, CGT at 28% would have been ~<b id="c-cgt">—</b>.</div>
+<div class="co co-r"><div class="ch">Service charge &mdash; action required</div>The outstanding service charge (<b id="c-sc2">—</b> estimated) must be disclosed to your conveyancers and the buyer&rsquo;s solicitors. It will appear on the LPE1 enquiries form. Chase the final demand from SHP before listing. Deducted from sale proceeds at completion.</div>
+
+<hr class="divider">
+<h2><span class="sn">2</span>Buying &mdash; costs split by ratio</h2>
+<div class="ratio-wrap">
+  <div class="ratio-head">
+    <div class="ratio-lbl">Buying costs ratio</div>
+    <div class="ratio-badge"><span class="rik-c" id="r-rik-pct">50%</span> Rik &nbsp;&middot;&nbsp; <span class="eli-c" id="r-eli-pct">50%</span> Elisa</div>
+  </div>
+  <div class="ratio-pills">
+    <span class="ratio-pill rik">Rik &nbsp;<b id="r-rik-val">50%</b></span>
+    <span class="ratio-pill eli"><b id="r-eli-val">50%</b>&nbsp; Elisa</span>
+  </div>
+  <div class="ratio-slider-wrap">
+    <input type="range" id="ratio-slider" min="0" max="100" step="1" value="50" style="width:100%">
+    <div class="ratio-marker" style="left:42%">income ratio (42%)</div>
+  </div>
+  <div class="ratio-note">Drag left to increase Rik&rsquo;s share, right for Elisa&rsquo;s &nbsp;&middot;&nbsp; income ratio marker at 42:58</div>
+</div>
+<table class="tbl">
+  <thead><tr><th>Item</th><th>Total</th><th class="rik-c" id="th-rik">Rik (50%)</th><th class="eli-c" id="th-eli">Elisa (50%)</th></tr></thead>
+  <tbody>
+    <tr><td>Stamp Duty Land Tax<span class="sub">See breakdown below</span></td><td id="c-sdlt">—</td><td class="rik-c" id="c-sdlt-r">—</td><td class="eli-c" id="c-sdlt-e">—</td></tr>
+    <tr><td>Solicitor / conveyancing</td><td>&pound;3,000</td><td class="rik-c" id="c-sol-r">—</td><td class="eli-c" id="c-sol-e">—</td></tr>
+    <tr><td>RICS Level 3 survey<span class="sub">Essential at this price point</span></td><td>&pound;1,200</td><td class="rik-c" id="c-sur-r">—</td><td class="eli-c" id="c-sur-e">—</td></tr>
+    <tr><td>Mortgage arrangement fee</td><td>&pound;1,000</td><td class="rik-c" id="c-fee-r">—</td><td class="eli-c" id="c-fee-e">—</td></tr>
+    <tr><td>Land Registry fee</td><td id="c-lr">—</td><td class="rik-c" id="c-lr-r">—</td><td class="eli-c" id="c-lr-e">—</td></tr>
+    <tr><td>Removals</td><td>&pound;2,000</td><td class="rik-c" id="c-rem-r">—</td><td class="eli-c" id="c-rem-e">—</td></tr>
+  </tbody>
+  <tr class="tot"><td><b>Buying costs subtotal</b></td><td id="c-buy-tot">—</td><td class="rik-c" id="c-buy-r">—</td><td class="eli-c" id="c-buy-e">—</td></tr>
+</table>
+<div class="co co-o"><div class="ch">SDLT breakdown</div>
+<table class="tbl" style="margin:4px 0 0">
+  <thead><tr><th>Band</th><th>Rate</th><th>Tax</th></tr></thead>
+  <tbody>
+    <tr class="band"><td>&pound;0 &ndash; &pound;125,000</td><td>0%</td><td>&pound;0</td></tr>
+    <tr class="band"><td>&pound;125,001 &ndash; &pound;250,000</td><td>2%</td><td>&pound;2,500</td></tr>
+    <tr class="band" id="b5-row"><td id="b5-lbl">&pound;250,001 &ndash; purchase price</td><td>5%</td><td id="b5-val">—</td></tr>
+    <tr class="band" id="b10-row" style="display:none"><td>&pound;925,001 &ndash; purchase price</td><td>10%</td><td id="b10-val">—</td></tr>
+  </tbody>
+  <tr class="tot"><td colspan="2" id="sdlt-foot"><b>Total SDLT</b></td><td id="c-sdlt-tot">—</td></tr>
+</table></div>
+
+<hr class="divider">
+<h2><span class="sn">3</span>Equity, contributions and mortgage</h2>
+<div class="bridge">
+  <div class="bh">Rik &mdash; equity from sale</div>
+  <div class="br"><div class="sg">+</div><div class="lb">Sale proceeds</div><div class="bv" id="br-sale">—</div></div>
+  <div class="br"><div class="sg">&minus;</div><div class="lb">Mortgage redemption</div><div class="bv" id="br-mort">—</div></div>
+  <div class="br"><div class="sg">&minus;</div><div class="lb">Selling costs <span class="sb">Agent, solicitor, EPC, exit fee (excl. service charge)</span></div><div class="bv" id="br-scosts">—</div></div>
+  <div class="br dt"><div class="sg">&minus;</div><div class="lb">Outstanding service charge (est.) <span class="sb">Kingslee Court major works &mdash; deducted at completion</span></div><div class="bv" id="br-sc">—</div></div>
+  <div class="br rt"><div class="sg">=</div><div class="lb">Net equity available as deposit <span class="sb">After all selling deductions</span></div><div class="bv" id="br-equity">—</div></div>
+</div>
+<div class="bridge">
+  <div class="bh">Additional deposits</div>
+  <div class="br" id="br-xrik-row"><div class="sg">+</div><div class="lb">Rik &mdash; additional cash</div><div class="bv rik-c" id="br-xrik">—</div></div>
+  <div class="br" id="br-xeli-row"><div class="sg">+</div><div class="lb">Elisa &mdash; additional cash</div><div class="bv eli-c" id="br-xeli">—</div></div>
+  <div class="br jt"><div class="sg">=</div><div class="lb">Total deposit</div><div class="bv" id="br-totdep">—</div></div>
+</div>
+<div class="bridge">
+  <div class="bh">Elisa &mdash; total cash outlay</div>
+  <div class="br"><div class="sg"></div><div class="lb">Her <span id="eli-pct-br">50%</span> of buying costs</div><div class="bv" id="br-eli-costs">—</div></div>
+  <div class="br" id="br-xeli2-row"><div class="sg">+</div><div class="lb">Her additional deposit</div><div class="bv eli-c" id="br-xeli2">—</div></div>
+  <div class="br et"><div class="sg">=</div><div class="lb">Elisa&rsquo;s total outlay <span class="sb">Buying costs share + additional deposit</span></div><div class="bv" id="br-eli-tot">—</div></div>
+</div>
+<div class="bridge">
+  <div class="bh">Joint mortgage</div>
+  <div class="br"><div class="sg">+</div><div class="lb">Purchase price</div><div class="bv" id="br-buy">—</div></div>
+  <div class="br"><div class="sg">&minus;</div><div class="lb">Total deposit</div><div class="bv" id="br-dep2">—</div></div>
+  <div class="br jt"><div class="sg">=</div><div class="lb">Joint mortgage required <span class="sb" id="br-ltv">—</span></div><div class="bv" id="br-mtg">—</div></div>
+</div>
+<div class="co co-b"><div class="ch">Cash needed on completion</div>SDLT and buying costs must be paid in cash at completion &mdash; they cannot be borrowed within the mortgage. Elisa needs <b id="co-eli">—</b> in liquid savings. Rik needs <b id="co-sell">—</b> at exchange for selling costs (service charge deducted from proceeds separately).</div>
+<div class="co co-n"><div class="ch">Declaration of Trust</div>Rik brings a significantly larger deposit. A Declaration of Trust (tenants in common) records each party&rsquo;s beneficial interest from day one. Discuss whether beneficial ownership should match the running cost ratio or reflect the deposit ratio separately.</div>
+
+<hr class="divider">
+<h2><span class="sn">4</span>SDLT thresholds</h2>
+<div class="thg">
+  <div class="thc"><div class="tp" id="th1-p">—</div><div class="ts">SDLT: <strong id="th1-s">—</strong> / <span id="th1-e">—</span> each</div><div class="thbar"><div class="thfil" id="th1-b" style="width:65%"></div></div><div class="thn">Current scenario</div></div>
+  <div class="thc"><div class="tp" id="th2-p">—</div><div class="ts">SDLT: <strong id="th2-s">—</strong> / <span id="th2-e">—</span> each</div><div class="thbar"><div class="thfil" id="th2-b" style="width:70%"></div></div><div class="thn" id="th2-n">—</div></div>
+  <div class="thc"><div class="tp">&pound;924,999</div><div class="ts">SDLT: <strong>&pound;36,250</strong> / &pound;18,125 each</div><div class="thbar"><div class="thfil" style="width:80%"></div></div><div class="thn">Last penny before 10% band</div></div>
+  <div class="thc al"><div class="tp">&pound;925,000+</div><div class="ts">10% band begins &mdash; <strong>watch this line</strong></div><div class="thbar"><div class="thfil" style="width:80%"></div></div><div class="thn">Every &pound;10k above = &pound;500 extra SDLT</div></div>
+</div>
+<div class="co co-r"><div class="ch">Negotiation tip</div>If negotiating between &pound;925k&ndash;&pound;970k, push the vendor to <b>&pound;924,999</b>. Every pound above the cliff costs 10p in SDLT rather than 5p.</div>
+
+<hr class="divider">
+<h2><span class="sn">5</span>Mortgage forecaster</h2>
+<div class="g3">
+  <div><label style="font-size:12px;color:var(--color-text-secondary);display:block;margin-bottom:4px">Interest rate</label><div class="mw"><span>%</span><input id="m-rate" type="number" min="0.1" max="15" step="0.01" value="3.89"><span>per yr</span></div></div>
+  <div><label style="font-size:12px;color:var(--color-text-secondary);display:block;margin-bottom:4px">Term</label><div class="mw"><input id="m-term" type="number" min="5" max="35" step="1" value="25"><span>years</span></div></div>
+  <div><label style="font-size:12px;color:var(--color-text-secondary);display:block;margin-bottom:4px">Mortgage (syncs above)</label><div class="mw ro"><span>&pound;</span><input id="m-prin" type="number" min="0" max="3000000" step="1000" value="555050" readonly></div></div>
+</div>
+<p class="sub" style="margin-top:0">Rate defaults to your current deal (3.89%). Adjust to model remortgage scenarios.</p>
+<div class="g4" style="margin-bottom:.75rem">
+  <div class="mc wa"><div class="ml">Monthly (joint)</div><div class="mv" id="m-mo">—</div><div class="mn">total</div></div>
+  <div class="mc if"><div class="ml">Each per month</div><div class="mv" id="m-mo-e">—</div><div class="mn" id="m-mo-e2">—</div></div>
+  <div class="mc"><div class="ml">Yearly (joint)</div><div class="mv" id="m-yr">—</div></div>
+  <div class="mc"><div class="ml">Total interest paid</div><div class="mv" id="m-int">—</div><div class="mn" id="m-int-p">—</div></div>
+</div>
+<table class="tbl">
+  <thead><tr><th>Item</th><th>Monthly</th><th>Yearly</th><th class="rik-c" id="mt-th-r">Rik /mo</th><th class="eli-c" id="mt-th-e">Elisa /mo</th><th>Full term</th></tr></thead>
+  <tbody>
+    <tr><td>Total repayment</td><td id="mt-mo">—</td><td id="mt-yr">—</td><td class="rik-c" id="mt-r">—</td><td class="eli-c" id="mt-e">—</td><td id="mt-tot">—</td></tr>
+    <tr><td>&nbsp;&nbsp;of which: interest</td><td id="mt-imo">—</td><td id="mt-iyr">—</td><td class="rik-c" id="mt-ir">—</td><td class="eli-c" id="mt-ie">—</td><td id="mt-itot">—</td></tr>
+    <tr><td>&nbsp;&nbsp;of which: capital</td><td id="mt-cmo">—</td><td id="mt-cyr">—</td><td class="rik-c" id="mt-cr">—</td><td class="eli-c" id="mt-ce">—</td><td id="mt-ctot">—</td></tr>
+  </tbody>
+  <tr class="tot"><td><b>Per-person term total</b></td><td colspan="2"></td><td class="rik-c" id="mt-rterm">—</td><td class="eli-c" id="mt-eterm">—</td><td id="mt-term">—</td></tr>
+</table>
+
+<hr class="divider">
+<h2><span class="sn">6</span>Overpayment calculator</h2>
+<div class="g3">
+  <div><label style="font-size:12px;color:var(--color-text-secondary);display:block;margin-bottom:4px">Rik &mdash; overpayment</label><div class="mw"><span>&pound;</span><input id="op-rik" type="number" min="0" max="5000" step="50" value="50"><span>/mo</span></div></div>
+  <div><label style="font-size:12px;color:var(--color-text-secondary);display:block;margin-bottom:4px">Elisa &mdash; overpayment</label><div class="mw"><span>&pound;</span><input id="op-eli" type="number" min="0" max="5000" step="50" value="50"><span>/mo</span></div></div>
+  <div><label style="font-size:12px;color:var(--color-text-secondary);display:block;margin-bottom:4px">Total overpayment</label><div class="mw ro"><span>&pound;</span><input id="op-tot" type="number" value="100" readonly><span>/mo</span></div></div>
+</div>
+<div class="g4" style="margin-bottom:.75rem">
+  <div class="mc gs"><div class="ml">Time saved</div><div class="mv" id="op-ts">—</div><div class="mn" id="op-nt">—</div></div>
+  <div class="mc gs"><div class="ml">Interest saved</div><div class="mv" id="op-is">—</div><div class="mn">vs baseline</div></div>
+  <div class="mc"><div class="ml">Extra / year (joint)</div><div class="mv" id="op-ey">—</div><div class="mn" id="op-ee">—</div></div>
+  <div class="mc"><div class="ml">Return on overpayment</div><div class="mv" id="op-roi">—</div><div class="mn">guaranteed rate</div></div>
+</div>
+<div class="chart-box">
+  <div style="font-size:12px;color:var(--color-text-secondary);font-weight:500;margin-bottom:8px">Outstanding balance over time</div>
+  <svg id="op-svg" viewBox="0 0 640 200" xmlns="http://www.w3.org/2000/svg"></svg>
+  <div class="leg">
+    <div class="leg-i"><div class="leg-l" style="background:rgba(128,128,128,0.4)"></div>Baseline (no overpayment)</div>
+    <div class="leg-i"><div class="leg-l" style="background:rgba(30,107,48,0.8)"></div>With overpayment</div>
+  </div>
+</div>
+<div class="co co-g"><div class="ch">Why overpayment is a guaranteed return</div>Every pound overpaid saves exactly your mortgage rate &mdash; <b id="op-rate-co">3.89%</b> &mdash; in interest, guaranteed and risk-free. Most lenders allow up to 10% of outstanding balance per year without Early Repayment Charge. Verify with your lender before the fixed period begins.</div>
+
+<div class="footer">Herbert-Williams Relocation Research &middot; May 2025 &middot; Estimates only &mdash; verify with your solicitor and mortgage broker before exchange</div>
+</div>
+
+<script>
+var P2014=249000,SELL_BASE=1750;
+var BUY_ITEMS={sol:3000,sur:1200,fee:1000,rem:2000};
+var riksPct=50;
+function f(n){return'\u00a3'+Math.round(n).toLocaleString('en-GB')}
+function s(id,v){var e=document.getElementById(id);if(e)e.textContent=v}
+function sdlt(p){var t=0;if(p>125000)t+=(Math.min(p,250000)-125000)*.02;if(p>250000)t+=(Math.min(p,925000)-250000)*.05;if(p>925000)t+=(Math.min(p,1500000)-925000)*.10;if(p>1500000)t+=(p-1500000)*.12;return Math.round(t)}
+function lr(p){if(p<=80000)return 20;if(p<=100000)return 40;if(p<=200000)return 100;if(p<=500000)return 150;if(p<=1000000)return 295;return 500}
+function fmtM(m){var y=Math.floor(m/12),mo=m%12;if(!mo)return y+'yr'+(y!=1?'s':'');if(!y)return mo+'mo';return y+'yr'+(y!=1?'s':'')+' '+mo+'mo'}
+function amort(P,r,pmt,extra){var bal=P,int=0,bals=[P],mo=0;while(bal>0.01&&mo<600){var i=bal*r,cap=pmt-i;if(cap<=0){mo=600;break}var x=Math.max(0,Math.min(extra,bal-cap));bal-=(cap+x);if(bal<0)bal=0;int+=i;mo++;bals.push(bal)}return{months:mo,interest:int,bals:bals}}
+function splitR(total){return{r:Math.round(total*riksPct/100),e:Math.round(total*(100-riksPct)/100)}}
+function updateRatioUI(){
+  var rp=riksPct,ep=100-riksPct;
+  s('r-rik-pct',rp+'%');s('r-eli-pct',ep+'%');s('r-rik-val',rp+'%');s('r-eli-val',ep+'%');
+  s('th-rik','Rik ('+rp+'%)');s('th-eli','Elisa ('+ep+'%)');
+  s('eli-pct-br',ep+'%');s('mt-th-r','Rik '+rp+'% /mo');s('mt-th-e','Elisa '+ep+'% /mo');
+  var el=document.getElementById('ratio-slider');if(el)el.value=rp;
+}
+function recalc(){
+  var sale=parseInt(document.getElementById('v-sale').value)||350000;
+  var buy=parseInt(document.getElementById('v-buy').value)||800000;
+  var mort=parseInt(document.getElementById('v-mort').value)||157000;
+  var xRik=parseInt(document.getElementById('v-xrik').value)||0;
+  var xEli=parseInt(document.getElementById('v-xeli').value)||0;
+  var sc=parseInt(document.getElementById('v-sc').value)||0;
+  document.getElementById('s-sale').value=Math.min(sale,1000000);
+  document.getElementById('s-buy').value=Math.min(buy,2000000);
+  document.getElementById('s-xrik').value=Math.min(xRik,500000);
+  document.getElementById('s-xeli').value=Math.min(xEli,500000);
+  var agent=Math.round(sale*.015*1.2);
+  var sellCostsExSC=agent+SELL_BASE,sellCosts=sellCostsExSC+sc;
+  var equity=sale-mort-sellCosts;
+  var tx=sdlt(buy),lrFee=lr(buy);
+  var fixedItems=BUY_ITEMS.sol+BUY_ITEMS.sur+BUY_ITEMS.fee+BUY_ITEMS.rem;
+  var buyTot=tx+lrFee+fixedItems;
+  var txSplit=splitR(tx),lrSplit=splitR(lrFee);
+  var buySplit={r:txSplit.r+lrSplit.r+Math.round(fixedItems*riksPct/100),e:txSplit.e+lrSplit.e+Math.round(fixedItems*(100-riksPct)/100)};
+  var totDep=equity+xRik+xEli,mortgage=Math.max(0,buy-totDep),ltv=(mortgage/buy*100).toFixed(1);
+  var gain=Math.max(0,sale-P2014),ep=100-riksPct;
+  s('o-rik',f(sellCosts+buySplit.r));s('o-eli',f(buySplit.e+xEli));s('o-eli-note',ep+'% share of buying costs');
+  s('o-mtg',f(mortgage));s('o-ltv',ltv+'% LTV');
+  var w=document.getElementById('sdlt-warn');if(w)w.style.display=buy>=925000?'block':'none';
+  s('c-agent',f(agent));s('c-sc',f(sc));s('c-sc2',f(sc));s('c-sell-tot','~'+f(sellCosts));
+  s('c-gain',f(gain));s('c-cgt',f(Math.round(gain*.28)));
+  s('c-sdlt',f(tx));s('c-sdlt-r',f(txSplit.r));s('c-sdlt-e',f(txSplit.e));
+  s('c-sol-r',f(Math.round(BUY_ITEMS.sol*riksPct/100)));s('c-sol-e',f(Math.round(BUY_ITEMS.sol*ep/100)));
+  s('c-sur-r',f(Math.round(BUY_ITEMS.sur*riksPct/100)));s('c-sur-e',f(Math.round(BUY_ITEMS.sur*ep/100)));
+  s('c-fee-r',f(Math.round(BUY_ITEMS.fee*riksPct/100)));s('c-fee-e',f(Math.round(BUY_ITEMS.fee*ep/100)));
+  s('c-rem-r',f(Math.round(BUY_ITEMS.rem*riksPct/100)));s('c-rem-e',f(Math.round(BUY_ITEMS.rem*ep/100)));
+  s('c-lr',f(lrFee));s('c-lr-r',f(lrSplit.r));s('c-lr-e',f(lrSplit.e));
+  s('c-buy-tot','~'+f(buyTot));s('c-buy-r','~'+f(buySplit.r));s('c-buy-e','~'+f(buySplit.e));
+  var b5=(buy>250000?(Math.min(buy,925000)-250000)*.05:0),b10=(buy>925000?(Math.min(buy,1500000)-925000)*.10:0);
+  var r10=document.getElementById('b10-row'),b5l=document.getElementById('b5-lbl');
+  if(buy>925000){if(r10)r10.style.display='';if(b5l)b5l.textContent='\u00a3250,001\u2013\u00a3925,000';s('b10-val',f(b10))}
+  else{if(r10)r10.style.display='none';if(b5l)b5l.textContent='\u00a3250,001\u2013'+f(buy)}
+  s('b5-val',f(b5));s('c-sdlt-tot',f(tx));s('sdlt-foot','Total SDLT \u2014 '+f(txSplit.r)+' Rik / '+f(txSplit.e)+' Elisa');
+  s('br-sale',f(sale));s('br-mort',f(mort));s('br-scosts','~'+f(sellCostsExSC));s('br-sc',f(sc));s('br-equity','~'+f(equity));
+  s('br-xrik',f(xRik));s('br-xeli',f(xEli));s('br-totdep','~'+f(totDep));
+  var rxr=document.getElementById('br-xrik-row'),rxe=document.getElementById('br-xeli-row');
+  if(rxr)rxr.style.opacity=xRik>0?'1':'.3';if(rxe)rxe.style.opacity=xEli>0?'1':'.3';
+  s('br-eli-costs','~'+f(buySplit.e));s('br-xeli2',f(xEli));
+  var rxe2=document.getElementById('br-xeli2-row');if(rxe2)rxe2.style.opacity=xEli>0?'1':'.3';
+  s('br-eli-tot','~'+f(buySplit.e+xEli));s('br-buy',f(buy));s('br-dep2','~'+f(totDep));
+  s('br-mtg','~'+f(mortgage));s('br-ltv',ltv+'% LTV');s('co-eli',f(buySplit.e+xEli));s('co-sell','~'+f(sellCostsExSC));
+  s('th1-p',f(buy));s('th1-s',f(tx));s('th1-e',f(txSplit.e));
+  var buy2=buy+50000,tx2=sdlt(buy2),tx2s=splitR(tx2);
+  s('th2-p',f(buy2));s('th2-s',f(tx2));s('th2-e',f(tx2s.e));
+  s('th2-n','+'+f(tx2s.e-txSplit.e)+' Elisa / +'+f(tx2s.r-txSplit.r)+' Rik vs current');
+  var b1=document.getElementById('th1-b'),b2=document.getElementById('th2-b');
+  if(b1)b1.style.width=Math.min(95,Math.max(10,(tx/80000)*100))+'%';
+  if(b2)b2.style.width=Math.min(95,Math.max(10,(tx2/80000)*100))+'%';
+  var mp=document.getElementById('m-prin');
+  if(mp&&document.activeElement!==mp){mp.value=Math.round(mortgage);calcM();calcOp()}
+}
+function calcM(){
+  var P=parseFloat(document.getElementById('m-prin').value)||555050;
+  var r=(parseFloat(document.getElementById('m-rate').value)||3.89)/100/12;
+  var n=(parseInt(document.getElementById('m-term').value)||25)*12;
+  var pmt=r===0?P/n:P*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1);
+  var totRep=pmt*n,totInt=totRep-P,yr=pmt*12,intMo=totInt/n,capMo=pmt-intMo;
+  var rp=riksPct/100,ep=1-rp;
+  s('o-mth',f(Math.round(pmt)));s('o-mth2',f(Math.round(pmt*rp))+' Rik / '+f(Math.round(pmt*ep))+' Elisa');
+  s('m-mo',f(Math.round(pmt)));s('m-mo-e',f(Math.round(pmt*rp))+' / '+f(Math.round(pmt*ep)));s('m-mo-e2','Rik '+riksPct+'% / Elisa '+(100-riksPct)+'%');
+  s('m-yr',f(Math.round(yr)));s('m-int',f(Math.round(totInt)));s('m-int-p',(totInt/P*100).toFixed(1)+'% of principal');
+  s('mt-mo',f(Math.round(pmt)));s('mt-yr',f(Math.round(yr)));
+  s('mt-r',f(Math.round(pmt*rp)));s('mt-e',f(Math.round(pmt*ep)));s('mt-tot',f(Math.round(totRep)));
+  s('mt-imo',f(Math.round(intMo)));s('mt-iyr',f(Math.round(intMo*12)));
+  s('mt-ir',f(Math.round(intMo*rp)));s('mt-ie',f(Math.round(intMo*ep)));s('mt-itot',f(Math.round(totInt)));
+  s('mt-cmo',f(Math.round(capMo)));s('mt-cyr',f(Math.round(capMo*12)));
+  s('mt-cr',f(Math.round(capMo*rp)));s('mt-ce',f(Math.round(capMo*ep)));s('mt-ctot',f(Math.round(P)));
+  s('mt-rterm',f(Math.round(totRep*rp)));s('mt-eterm',f(Math.round(totRep*ep)));s('mt-term',f(Math.round(totRep)));
+}
+function calcOp(){
+  var P=parseFloat(document.getElementById('m-prin').value)||555050;
+  var rate=parseFloat(document.getElementById('m-rate').value)||3.89;
+  var n=(parseInt(document.getElementById('m-term').value)||25)*12,r=rate/100/12;
+  var opR=parseFloat(document.getElementById('op-rik').value)||0,opE=parseFloat(document.getElementById('op-eli').value)||0,opT=opR+opE;
+  document.getElementById('op-tot').value=opT;
+  var pmt=r===0?P/n:P*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1);
+  var base=amort(P,r,pmt,0),op=amort(P,r,pmt,opT);
+  var saved=base.months-op.months,iSaved=base.interest-op.interest;
+  var bTot=pmt*base.months,oTot=pmt*op.months+opT*op.months;
+  s('op-ts',saved>0?fmtM(saved):'None');s('op-nt','Paid off in '+fmtM(op.months));
+  s('op-is',saved>0?f(Math.round(iSaved)):f(0));s('op-ey',f(opT*12));
+  s('op-ee',f(opR*12)+' Rik / '+f(opE*12)+' Elisa');s('op-roi',rate.toFixed(2)+'%');s('op-rate-co',rate.toFixed(2)+'%');
+  drawChart(base.bals,op.bals,P);
+}
+function drawChart(bb,ob,P){
+  var svg=document.getElementById('op-svg');if(!svg)return;
+  var W=640,H=200,pl=52,pr=12,pt=10,pb=28,cW=W-pl-pr,cH=H-pt-pb;
+  var nB=bb.length-1,nO=ob.length-1,maxM=nB;
+  function xp(m){return pl+(m/maxM)*cW}function yp(v){return pt+cH-(v/P)*cH}
+  function path(bals){var d='';for(var i=0;i<bals.length;i++)d+=(i?'L':'M')+xp(i).toFixed(1)+','+yp(bals[i]).toFixed(1);return d}
+  var fillD=path(ob)+' L'+xp(nO).toFixed(1)+','+yp(0).toFixed(1);
+  for(var i=Math.min(nB,nO);i>=0;i--)fillD+=' L'+xp(i).toFixed(1)+','+yp(bb[i]).toFixed(1);fillD+=' Z';
+  var grid='',totalYrs=Math.ceil(maxM/12),xStep=totalYrs<=15?2:5;
+  for(var i=0;i<=4;i++){var v=(P/4)*i,y=yp(v),lbl=v>=1000000?(v/1000000).toFixed(1)+'m':v>=1000?Math.round(v/1000)+'k':''+Math.round(v);
+    grid+='<line x1="'+pl+'" y1="'+y.toFixed(1)+'" x2="'+(W-pr)+'" y2="'+y.toFixed(1)+'" stroke="rgba(0,0,0,0.07)" stroke-width="1"/><text x="'+(pl-4)+'" y="'+(parseFloat(y.toFixed(1))+4)+'" text-anchor="end" font-size="9" fill="rgba(128,128,128,0.8)" font-family="sans-serif">\u00a3'+lbl+'</text>'}
+  for(var yr=0;yr<=totalYrs;yr+=xStep){var m=yr*12;if(m>maxM)break;var x=xp(m);
+    grid+='<text x="'+x.toFixed(1)+'" y="'+(H-8)+'" text-anchor="middle" font-size="9" fill="rgba(128,128,128,0.8)" font-family="sans-serif">Yr '+yr+'</text>'}
+  var ann='';if(nO<nB){var ox=xp(nO).toFixed(1);
+    ann='<line x1="'+ox+'" y1="'+pt+'" x2="'+ox+'" y2="'+(H-pb)+'" stroke="rgba(30,107,48,0.5)" stroke-width="1" stroke-dasharray="3 2"/><text x="'+(parseFloat(ox)+3)+'" y="'+(pt+10)+'" font-size="9" fill="rgba(30,107,48,0.9)" font-family="sans-serif" font-weight="bold">Paid off</text><text x="'+(parseFloat(ox)+3)+'" y="'+(pt+21)+'" font-size="9" fill="rgba(30,107,48,0.8)" font-family="sans-serif">'+fmtM(nO)+'</text>'}
+  svg.innerHTML='<rect width="'+W+'" height="'+H+'" fill="transparent"/>' +grid+'<path d="'+fillD+'" fill="rgba(30,107,48,0.1)" stroke="none"/><path d="'+path(bb)+'" fill="none" stroke="rgba(128,128,128,0.4)" stroke-width="1.5"/><path d="'+path(ob)+'" fill="none" stroke="rgba(30,107,48,0.85)" stroke-width="2"/><line x1="'+pl+'" y1="'+pt+'" x2="'+pl+'" y2="'+(H-pb)+'" stroke="rgba(0,0,0,0.1)" stroke-width="1"/><line x1="'+pl+'" y1="'+(H-pb)+'" x2="'+(W-pr)+'" y2="'+(H-pb)+'" stroke="rgba(0,0,0,0.1)" stroke-width="1"/>'+ann}
+function sp(iid,sid,fn){
+  var inp=document.getElementById(iid),sld=document.getElementById(sid);
+  if(inp)inp.addEventListener('input',function(){if(sld)sld.value=Math.min(this.value,parseFloat(sld.max));fn()});
+  if(sld)sld.addEventListener('input',function(){if(inp)inp.value=this.value;fn()});}
+sp('v-sale','s-sale',recalc);sp('v-buy','s-buy',recalc);sp('v-xrik','s-xrik',recalc);sp('v-xeli','s-xeli',recalc);
+var vm=document.getElementById('v-mort');if(vm)vm.addEventListener('input',recalc);
+var vsc=document.getElementById('v-sc');if(vsc)vsc.addEventListener('input',recalc);
+var rs=document.getElementById('ratio-slider');
+if(rs){rs.addEventListener('input',function(){riksPct=parseInt(this.value);updateRatioUI();recalc();calcM();calcOp();})}
+['m-rate','m-term'].forEach(function(id){var e=document.getElementById(id);if(e)e.addEventListener('input',function(){calcM();calcOp();})});
+var mp=document.getElementById('m-prin');if(mp)mp.addEventListener('input',function(){calcM();calcOp();});
+['op-rik','op-eli'].forEach(function(id){var e=document.getElementById(id);if(e)e.addEventListener('input',calcOp);});
+updateRatioUI();recalc();
+</script>
+</body>
+</html>
